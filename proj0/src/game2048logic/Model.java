@@ -1,5 +1,6 @@
 package game2048logic;
 
+import edu.princeton.cs.algs4.In;
 import game2048rendering.Board;
 import game2048rendering.Side;
 import game2048rendering.Tile;
@@ -81,12 +82,79 @@ public class Model {
         return board;
     }
 
+    /** Helper fn that returns true if at least one space is equal to the tileValue passed. **/
+    public boolean searchBoardForTileValue(Object expectedTileValue) {
+        for (int x = 0; x < board.size(); x++) {
+            for (int y = 0; y < board.size(); y++) {
+                Tile currentTile = tile(x, y);
+                if (currentTile == null && expectedTileValue == null) {
+                    return true;
+                } else if (currentTile != null && currentTile.value() ==  (Integer) expectedTileValue){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /** Helper fn that checks tiles above, below, left, and right of a currentTile.
+     * 1. returns true if any adjacent tile is null and currentTile is null
+     * 2. returns true if any adjacent tile's value equals the currentTile value **/
+//    public boolean equalAdjacentTileValue(int x, int y, Tile currentTile) {
+//        Tile tileAbove = tile(x, y+1);
+//        Tile tileBelow = tile(x, y-1);
+//        Tile tileLeft = tile(x-1, y);
+//        Tile tileRight = tile(x+1, y);
+//        int SIZE = board.size();
+//        Tile topRightTile = tile(SIZE, SIZE);
+//        Tile topLeftTile = tile(0, SIZE);
+//        Tile botRightTile = tile(SIZE, 0);
+//        Tile botLeftTile = tile(0, 0);
+//
+//        if (botLeftTile == null && (tile(x+1, y) == null || tile(x, y+1) == null)) {
+//            return true;
+//        } else if (botRightTile == null && (tile(x-1, y) == null || tile(x, y+1) == null)) {
+//            return true;
+//        } else if (topLeftTile == null && (tile(x, y-1) == null || tile(x+1, y) == null)) {
+//            return true;
+//        } else if (topRightTile == null && (tile(x, y-1) == null || tile(x-1, y) == null)) {
+//            return true;
+//        } else {
+//            if (currentTile == null
+//                    && (tileAbove == null
+//                    || tileBelow == null
+//                    || tileLeft == null
+//                    || tileRight == null)) {
+//                return true;
+//            } else if (currentTile != null) {
+//                return currentTile.value() == tileAbove.value()
+//                        || currentTile.value() == tileBelow.value()
+//                        || currentTile.value() == tileLeft.value()
+//                        || currentTile.value() == tileRight.value();
+//            }
+//            return false;
+//        }
+//    }
+
+    /** Helper fn that returns true if at least one space is equal to the tileValue passed. **/
+    public boolean searchBoardForEqualAdjacentTileValues() {
+        int SIZE = board.size();
+        for (int y = 0; y < SIZE; y++) {
+            for (int x = 0; x < SIZE; x++) {
+                Tile currentTile = tile(x, y);
+//                if (equalAdjacentTileValue(x, y, currentTile)) {
+//                    return true;
+//                }
+            }
+        }
+        return false;
+    }
+
     /** Returns true if at least one space on the board is empty.
      *  Empty spaces are stored as null.
      * */
     public boolean emptySpaceExists() {
-        // TODO: Task 1. Fill in this function.
-        return false;
+        return searchBoardForTileValue(null);
     }
 
     /**
@@ -95,8 +163,7 @@ public class Model {
      * given a Tile object t, we get its value with t.value().
      */
     public boolean maxTileExists() {
-        // TODO: Task 2. Fill in this function.
-        return false;
+        return searchBoardForTileValue(MAX_PIECE);
     }
 
     /**
@@ -106,8 +173,9 @@ public class Model {
      * 2. There are two adjacent tiles with the same value.
      */
     public boolean atLeastOneMoveExists() {
-        // TODO: Task 3. Fill in this function.
-        return false;
+        boolean c1 = emptySpaceExists();
+        boolean c2 = searchBoardForEqualAdjacentTileValues();
+        return c1 || c2;
     }
 
     /**
